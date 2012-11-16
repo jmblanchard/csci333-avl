@@ -6,6 +6,7 @@
 template <typename T>
 AVL<T>::AVL() {
   root = 0;
+  depth = 0;
 }
 
 template <typename T>
@@ -16,9 +17,20 @@ AVL<T>::~AVL() {
 
 template <typename T>
 bool AVL<T>::find(T v) {
-  Node<T>* temp = new Node<T>(v);
-  root = temp;  
-  return true;
+    Node<T> *curr = root;
+
+    while (curr != 0 && curr->getValue() != v) {
+        if (curr->getValue() > v) {
+            curr = curr->getLeftChild();
+        } else if (curr->getValue() < v) {
+            curr = curr->getRightChild();
+        }
+    }
+
+    if (curr == 0)
+        return false;
+
+    return true;
 }
 
 template <typename T>
@@ -176,6 +188,14 @@ void AVL<T>::traversalPrint(Node<T>* root) {
     std::cout << root->getValue() << std::endl;
     traversalPrint(root->getRightChild());
   }
+}
+
+template <typename T>
+void AVL<T>::rotateLeft(Node<T> *n) {
+}
+
+template <typename T>
+void AVL<T>::rotateRight(Node<T> *n) {
 }
 
 template class AVL<int>;

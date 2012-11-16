@@ -8,8 +8,13 @@ template <typename T>
 class AVL {
  private:
   Node<T>* root;
+  int depth;
+
   void traversalPrint(Node<T>* root);
   void bfsPrint(Node<T> *n);
+
+  void rotateLeft(Node<T> *n);
+  void rotateRight(Node<T> *n);
 
  public:
   AVL<T>();
