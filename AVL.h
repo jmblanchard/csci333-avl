@@ -18,6 +18,9 @@ class AVL {
 
   void reCalcBalance(Node<T> *n);
 
+  void inOrderTraversal(Node<T> *n);
+  void postOrderTraversal(Node<T> *n);
+
  public:
   AVL<T>();
   ~AVL<T>();
@@ -26,6 +29,8 @@ class AVL {
   void remove(T v);
   void insert(T v);
   void print();
+  void printInOrder();
+  void printPostOrder();
 };
 
 

@@ -15,6 +15,35 @@ AVL<T>::~AVL() {
   
 }
 
+template <typename T>
+void AVL<T>::printInOrder() {
+    inOrderTraversal(root);
+}
+
+template <typename T>
+void AVL<T>::printPostOrder() {
+    postOrderTraversal(root);
+}
+
+template <typename T>
+void AVL<T>::inOrderTraversal(Node<T> *n) {
+    if(n == 0)
+        return;
+
+    inOrderTraversal(n->getLeftChild());
+    std::cout << n->getValue() << "\n";
+    inOrderTraversal(n->getRightChild());
+}
+
+template <typename T>
+void AVL<T>::postOrderTraversal(Node<T> *n) {
+    if(n == 0)
+        return;
+
+    postOrderTraversal(n->getLeftChild());
+    postOrderTraversal(n->getRightChild());
+    std::cout << n->getValue() << "\n";
+}
 
 template <typename T>
 bool AVL<T>::find(T v) {

@@ -22,9 +22,14 @@ int main() {
 
   avl->print();
 
+  std::cout << "\n";
   avl->remove(6);
 
   avl->print();
+  std::cout << "\n";
+  avl->printInOrder();
+  std::cout << "\n";
+  avl->printPostOrder();
 
   return 0;
 
