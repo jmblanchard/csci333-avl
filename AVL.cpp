@@ -35,19 +35,6 @@ bool AVL<T>::find(T v) {
 
 template <typename T>
 void AVL<T>::insert(T v) {
-  /*
-  Node<T>* temp = new Node<T>(v);
-  Node<T>** curr = &root;
-
-  while (*curr != 0) {
-    if (v < (*curr)->getValue()) {
-      curr = &((*curr)->getLeftChild());
-    } else if (v > (*curr)->getValue()) {
-      curr = &((*curr)->getRightChild());
-    }
-  }
-  *curr = temp;
-  */
     // node exists, exit
     if (find(v))
         return;
@@ -116,7 +103,6 @@ void AVL<T>::insert(T v) {
     }
 
     reCalcBalance(root);
-    std::cout << "root balance " << root->getBalance() << "\n"; 
 }
 
 template <typename T>
