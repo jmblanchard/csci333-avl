@@ -114,6 +114,9 @@ void AVL<T>::insert(T v) {
             }
         }
     }
+
+    reCalcBalance(root);
+    std::cout << "root balance " << root->getBalance() << "\n"; 
 }
 
 template <typename T>
@@ -300,7 +303,11 @@ void AVL<T>::rotateRight(Node<T> *n, Node<T> *n_parent) {
 
 template <typename T>
 void AVL<T>::reCalcBalance(Node<T> *n) {
-    n = n;
+    if (n->getLeftChild() != 0)
+        reCalcBalance(n->getLeftChild());
+    if (n->getRightChild() != 0)
+        reCalcBalance(n->getRightChild());
+    n->updateHeightAndBalance();
 }
 
 template class AVL<int>;
