@@ -1,0 +1,4 @@
+CSCI 333 Data Structures AVL implementation
+
+Insert seems to be working, remove seems to be working.
+Print is in horrible shape, only prints levels.
