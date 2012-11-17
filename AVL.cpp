@@ -1,5 +1,6 @@
 #include "AVL.h"
 #include <queue>
+#include <vector>
 #include <iostream>
 #include <assert.h>
 
@@ -112,8 +113,14 @@ void AVL<T>::remove(T v) {
     Node<T> *prev = 0;
     bool left = false;
 
+    // NEW
+    std::vector<Node<T> *> nodes_to_balance;
+
     // find node
     while (toDelete != 0 && toDelete->getValue() != v) {
+        // NEW: trace back to root for balancing
+        nodes_to_balance.push_back(toDelete);
+
         prev = toDelete;
         if (toDelete->getValue() < v) {
             toDelete = toDelete->getRightChild();
@@ -170,11 +177,22 @@ void AVL<T>::remove(T v) {
     } else { // find inorder predecessor (left then right all the way down)
         Node<T> *parent_iop = toDelete;
         Node<T> *iop = toDelete->getLeftChild();
+        nodes_to_balance.push_back(toDelete);
+
+        // NEW: we need this to replace toDelete with iop when we find it
+        int position_of_delete = nodes_to_balance.size() - 1;
 
         while (iop->getRightChild() != 0) {
             parent_iop = iop;
             iop = iop->getRightChild();
+
+            // NEW: we add the all the way to the parent iop for rebalancing
+            nodes_to_balance.push_back(parent_iop);
         }
+
+        // NEW: we've found iop, we replace toDelete in nodes_to_balance
+        // with it so we don't have a null pointer
+        nodes_to_balance[position_of_delete] = iop;
 
         iop->setRightChild(*(toDelete->getRightChild()));
 
@@ -198,6 +216,37 @@ void AVL<T>::remove(T v) {
         }
 
         delete toDelete;
+    }
+
+    // NEW: now we run through nodes_to_balance, balancing along the way
+    while (!nodes_to_balance.empty()) {
+        reCalcBalance(nodes_to_balance.back());
+
+        if (nodes_to_balance.back()->getBalance() == 2) {
+            if (nodes_to_balance.back()->getLeftChild()->getBalance() == -1)
+                rotateLeft(nodes_to_balance.back()->getLeftChild(),
+                        nodes_to_balance.back());
+
+            if (nodes_to_balance.back() == root) {
+                rotateRight(nodes_to_balance.back(), (Node<T> *)0);
+            } else {
+                rotateRight(nodes_to_balance.back(),
+                        nodes_to_balance[nodes_to_balance.size()-2]);
+            }
+        } else if (nodes_to_balance.back()->getBalance() == -2) {
+            if (nodes_to_balance.back()->getRightChild()->getBalance() == 1)
+                rotateRight(nodes_to_balance.back()->getRightChild(),
+                        nodes_to_balance.back());
+
+            if (nodes_to_balance.back() == root) {
+                rotateLeft(nodes_to_balance.back(), (Node<T> *)0);
+            } else {
+                rotateLeft(nodes_to_balance.back(), 
+                        nodes_to_balance[nodes_to_balance.size()-2]);
+            }
+        }
+
+        nodes_to_balance.pop_back();
     }
 }
 

@@ -22,6 +22,10 @@ int main() {
 
   avl->print();
 
+  avl->remove(6);
+
+  avl->print();
+
   return 0;
 
 }
