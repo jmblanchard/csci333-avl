@@ -13,8 +13,10 @@ class AVL {
   void traversalPrint(Node<T>* root);
   void bfsPrint(Node<T> *n);
 
-  void rotateLeft(Node<T> *n);
-  void rotateRight(Node<T> *n);
+  void rotateLeft(Node<T> *n, Node<T> *n_parent);
+  void rotateRight(Node<T> *n, Node<T> *n_parent);
+
+  void reCalcBalance(Node<T> *n);
 
  public:
   AVL<T>();

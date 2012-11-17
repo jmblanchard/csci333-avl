@@ -35,6 +35,7 @@ bool AVL<T>::find(T v) {
 
 template <typename T>
 void AVL<T>::insert(T v) {
+  /*
   Node<T>* temp = new Node<T>(v);
   Node<T>** curr = &root;
 
@@ -46,6 +47,73 @@ void AVL<T>::insert(T v) {
     }
   }
   *curr = temp;
+  */
+    // node exists, exit
+    if (find(v))
+        return;
+
+    Node<T> *temp = new Node<T>(v);
+    Node<T> *curr = root;
+    Node<T> *curr_parent = 0;
+    Node<T> *critical_parent = 0;
+    Node<T> *critical = 0;
+
+    if (curr == 0) {
+        root = temp;
+    } else {
+        // while we haven't found where to place it yet
+        while (true) {
+            // if we need to go left, else we go right
+            if (curr->getValue() > v) {
+                // if our current is 1, this becomes our critical point
+                if (curr->getBalance() == 1) {
+                    critical_parent = curr_parent;
+                    critical = curr;
+                }
+                
+                curr_parent = curr;
+                curr = curr->getLeftChild();
+                
+                // we have found where we need to insert!
+                if (curr == 0) {
+                    curr_parent->setLeftChild(*temp);
+                    break;
+                }
+            } else if (curr->getValue() < v) {
+                // if our current is -1, this becomes our critical point
+                if (curr->getBalance() == -1) {
+                    critical_parent = curr_parent;
+                    critical = curr;
+                }
+
+                curr_parent = curr;
+                curr = curr->getRightChild();
+
+                // we have found where we need to insert!
+                if (curr == 0) {
+                    curr_parent->setRightChild(*temp);
+                    break;
+                }
+            }
+        }
+
+        // if we have a critical point we need to do rotations
+        if (critical != 0) {
+            reCalcBalance(critical);
+
+            if (critical->getBalance() == 2) {
+                if (critical->getLeftChild()->getBalance() == -1)
+                    rotateLeft(critical->getLeftChild(), critical);
+
+                rotateRight(critical, critical_parent);
+            } else if (critical->getBalance() == -2) {
+                if (critical->getRightChild()->getBalance() == 1)
+                    rotateRight(critical->getRightChild(), critical);
+
+                rotateLeft(critical, critical_parent);
+            }
+        }
+    }
 }
 
 template <typename T>
@@ -191,11 +259,48 @@ void AVL<T>::traversalPrint(Node<T>* root) {
 }
 
 template <typename T>
-void AVL<T>::rotateLeft(Node<T> *n) {
+void AVL<T>::rotateLeft(Node<T> *n, Node<T> *n_parent) {
+    // do our swap here
+    Node<T> *temp = n->getRightChild();
+    n->setRightChild(*(temp->getLeftChild()));
+    temp->setLeftChild(*n);
+
+    // if we have a parent, we need to set its new child
+    // else, we are at the root, set new root
+    if (n_parent != 0) {
+        if (n_parent->getLeftChild() == n) {
+            n_parent->setLeftChild(*temp);
+        } else {
+            n_parent->setRightChild(*temp);
+        }
+    } else {
+        root = temp;
+    }
 }
 
 template <typename T>
-void AVL<T>::rotateRight(Node<T> *n) {
+void AVL<T>::rotateRight(Node<T> *n, Node<T> *n_parent) {
+    // do our swap here
+    Node<T> *temp = n->getLeftChild();
+    n->setLeftChild(*(temp->getRightChild()));
+    temp->setRightChild(*n);
+
+    // if we have a parent, we need to set its new child
+    // else, we are at the root, set new root
+    if (n_parent != 0) {
+        if (n_parent->getLeftChild() == n) {
+            n_parent->setLeftChild(*temp);
+        } else {
+            n_parent->setRightChild(*temp);
+        }
+    } else {
+        root = temp;
+    }
+}
+
+template <typename T>
+void AVL<T>::reCalcBalance(Node<T> *n) {
+    n = n;
 }
 
 template class AVL<int>;
